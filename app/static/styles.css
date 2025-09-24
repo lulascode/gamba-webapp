@@ -1,0 +1,92 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.bet-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bet-card {
+    padding: 15px 20px;
+    border-left: 6px solid #4CAF50;
+    background-color: #fafafa;
+    border-radius: 8px;
+    transition: transform 0.2s ease;
+}
+
+.bet-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.bet-card h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.4rem;
+    color: #222;
+}
+
+.bet-card p {
+    margin: 0;
+    color: #555;
+}
+
+.status {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 8px;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.vote-buttons {
+    margin-top: 10px;
+}
+
+.vote-buttons form {
+    display: flex;
+    gap: 8px;
+}
+
+.vote-buttons button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #2196F3;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.vote-buttons button:hover {
+    background-color: #1976D2;
+}
+
+.user-choice {
+    margin-top: 8px;
+    font-style: italic;
+    color: #444;
+}

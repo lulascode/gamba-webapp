@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Gamba Webapp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Aktuelle Wetten</h1>
+        <div class="bet-list">
+            {% for bet in bets %}
+            <div class="bet-card">
+                <h2>{{ bet.title }}</h2>
+                <p>{{ bet.description }}</p>
+                <span class="status">{{ bet.status }}</span>
+
+                <div class="vote-buttons">
+                    <form action="{{ url_for('main.vote', bet_id=bet.id) }}" method="POST">
+                        {% for option, count in bet.votes.items() %}
+                        <button type="submit" name="choice" value="{{ option }}">
+                            {{ option }} ({{ count }})
+                        </button>
+                        {% endfor %}
+                    </form>
+                </div>
+
+                {% if bet.user_choice %}
+                <div class="user-choice">
+                    Du hast gewählt: <strong>{{ bet.user_choice }}</strong>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
