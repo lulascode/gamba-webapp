@@ -7,6 +7,10 @@
 </head>
 <body>
     <div class="container">
+        <div class="top-right">
+            <a href="{{ url_for('main.logout') }}">Logout</a>
+        </div>
+
         <h1>Aktuelle Wetten</h1>
         <div class="bet-list">
             {% for bet in bets %}
@@ -15,21 +19,37 @@
                 <p>{{ bet.description }}</p>
                 <span class="status">{{ bet.status }}</span>
 
+                <!-- Eigene Abstimmung -->
                 <div class="vote-buttons">
-                    <form action="{{ url_for('main.vote', bet_id=bet.id) }}" method="POST">
-                        {% for option, count in bet.votes.items() %}
-                        <button type="submit" name="choice" value="{{ option }}">
-                            {{ option }} ({{ count }})
-                        </button>
-                        {% endfor %}
+                    <form method="POST" action="{{ url_for('main.vote', bet_id=bet.id) }}">
+                        <button type="submit" name="choice" value="JA" {% if user_choices.get(bet.id) == 'JA' %}disabled{% endif %}>JA</button>
+                        <button type="submit" name="choice" value="NEIN" {% if user_choices.get(bet.id) == 'NEIN' %}disabled{% endif %}>NEIN</button>
+                        <button type="submit" name="choice" value="VIELLEICHT" {% if user_choices.get(bet.id) == 'VIELLEICHT' %}disabled{% endif %}>VIELLEICHT</button>
                     </form>
+                    {% if user_choices.get(bet.id) %}
+                        <div class="user-choice">Deine Wahl: {{ user_choices.get(bet.id) }}</div>
+                    {% endif %}
                 </div>
 
-                {% if bet.user_choice %}
-                <div class="user-choice">
-                    Du hast gewählt: <strong>{{ bet.user_choice }}</strong>
+                <!-- Statistik als Tabelle -->
+                <div class="vote-stats">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>JA</th>
+                                <th>VIELLEICHT</th>
+                                <th>NEIN</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ bets_stats[bet.id]['JA'] }}</td>
+                                <td>{{ bets_stats[bet.id]['VIELLEICHT'] }}</td>
+                                <td>{{ bets_stats[bet.id]['NEIN'] }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                {% endif %}
             </div>
             {% endfor %}
         </div>

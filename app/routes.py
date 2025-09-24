@@ -8,27 +8,24 @@ main = Blueprint('main', __name__)
 @main.route('/')
 @login_required
 def index():
+    # Alle aktiven Wetten aus der DB abrufen
     active_bets = Bet.query.filter_by(status="active").all()
-    bet_data = []
 
+    # Statistik pro Wette vorbereiten
+    bets_stats = {}
     for bet in active_bets:
-        votes = {'JA': 0, 'NEIN': 0, 'VIELLEICHT': 0}
-        user_choice = None
-        for ub in bet.user_bets:
-            votes[ub.choice] += 1
-            if ub.user_id == current_user.id:
-                user_choice = ub.choice
+        votes = UserBet.query.filter_by(bet_id=bet.id).all()
+        stats = {"JA": 0, "NEIN": 0, "VIELLEICHT": 0}
+        for vote in votes:
+            if vote.choice in stats:
+                stats[vote.choice] += 1
+        bets_stats[bet.id] = stats
 
-        bet_data.append({
-            'id': bet.id,
-            'title': bet.title,
-            'description': bet.description,
-            'status': bet.status,
-            'votes': votes,
-            'user_choice': user_choice
-        })
+    # Eigene Wahl pro Wette abrufen
+    user_choices = {ub.bet_id: ub.choice for ub in UserBet.query.filter_by(user_id=current_user.id).all()}
 
-    return render_template('index.html', bets=bet_data)
+    return render_template('index.html', bets=active_bets, bets_stats=bets_stats, user_choices=user_choices)
+
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -42,6 +39,7 @@ def login():
         else:
             flash("Falscher Benutzername oder Passwort")
     return render_template('login.html')
+
 
 @main.route('/register', methods=['GET', 'POST'])
 def register():
@@ -59,11 +57,13 @@ def register():
             return redirect(url_for('main.login'))
     return render_template('register.html')
 
+
 @main.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
 
 @main.route('/vote/<int:bet_id>', methods=['POST'])
 @login_required

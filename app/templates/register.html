@@ -1,7 +1,24 @@
-<h1>Registrieren</h1>
-<form method="POST">
-    <input type="text" name="username" placeholder="Benutzername" required><br>
-    <input type="password" name="password" placeholder="Passwort" required><br>
-    <button type="submit">Registrieren</button>
-</form>
-<p>Schon registriert? <a href="{{ url_for('main.login') }}">Login</a></p>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrieren - Gamba Webapp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        {% if current_user.is_authenticated %}
+            <div class="top-right">
+                <a href="{{ url_for('main.logout') }}">Logout</a>
+            </div>
+        {% endif %}
+        <h1>Registrieren</h1>
+        <form method="POST" class="auth-form">
+            <input type="text" name="username" placeholder="Benutzername" required>
+            <input type="password" name="password" placeholder="Passwort" required>
+            <button type="submit">Registrieren</button>
+        </form>
+        <p class="auth-switch">Schon registriert? <a href="{{ url_for('main.login') }}">Login</a></p>
+    </div>
+</body>
+</html>

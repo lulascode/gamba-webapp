@@ -61,16 +61,13 @@ h1 {
     font-size: 0.85rem;
 }
 
+/* Abstimm-Buttons */
 .vote-buttons {
     margin-top: 10px;
 }
 
-.vote-buttons form {
-    display: flex;
-    gap: 8px;
-}
-
 .vote-buttons button {
+    margin-right: 8px;
     padding: 6px 14px;
     border: none;
     border-radius: 5px;
@@ -85,8 +82,124 @@ h1 {
     background-color: #1976D2;
 }
 
+/* Header & Logout */
+.header {
+    background-color: #4CAF50;
+    padding: 15px 0;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.header-container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logout-button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f44336;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}
+
 .user-choice {
     margin-top: 8px;
     font-style: italic;
     color: #444;
+}
+
+/* Auth-Form */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.auth-form input {
+    padding: 10px 12px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.auth-form input:focus {
+    border-color: #2196F3;
+}
+
+.auth-form button {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.auth-form button:hover {
+    background-color: #388E3C;
+}
+
+.auth-switch {
+    margin-top: 12px;
+    text-align: center;
+}
+
+.top-right {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+
+.top-right a {
+    text-decoration: none;
+    color: #2196F3;
+    font-weight: bold;
+}
+
+.top-right a:hover {
+    color: #1976D2;
+}
+
+/* Statistik-Tabelle */
+.vote-stats {
+    margin-top: 12px;
+    padding: 10px;
+    background-color: #e3f2fd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.vote-stats table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    table-layout: fixed; /* alle Spalten gleich breit */
+}
+
+.vote-stats th, .vote-stats td {
+    padding: 6px 0;
+    border: 1px solid #90caf9;
+}
+
+.vote-stats th {
+    background-color: #64b5f6;
+    color: white;
 }
