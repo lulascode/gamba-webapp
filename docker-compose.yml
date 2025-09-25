@@ -10,13 +10,15 @@ services:
       MARIADB_USER: user
       MARIADB_PASSWORD: password
     volumes:
-      - betting_db:/var/lib/mysql
+      #- betting_db:/var/lib/mysql    # local   Deployment
+      - /mnt/FastData/Databases/gamba-data:/var/lib/mysql # TrueNAS Deployment
     ports:
       - "3306:3306"   # nur nötig, wenn du z.B. von VSCode oder extern auf DB willst
 
   app:
     build:
-      context: https://github.com/lulascode/gamba-webapp.git#main
+      context: https://github.com/lulascode/gamba-webapp.git#main   # github Deployment
+      #context: .                                                    # local  Deployment
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
