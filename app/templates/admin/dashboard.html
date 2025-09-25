@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
 <div class="container">
@@ -22,6 +24,7 @@
         <input type="text" name="option2" placeholder="Option 2" required>
         <input type="text" name="option3" placeholder="Option 3 (optional)">
         <input type="text" name="option4" placeholder="Option 4 (optional)">
+        <input type="text" id="deadline" name="deadline" placeholder="Deadline">
         <button type="submit">➕ Hinzufügen</button>
     </form>
 
@@ -32,6 +35,11 @@
             <h2>{{ bet.title }}</h2>
             <p>{{ bet.description }}</p>
             <span class="status">{{ bet.status }}</span>
+            {% if bet.deadline %}
+                <p style="font-size:0.85rem; color:#888;">
+                    Ablauf: {{ bet.deadline.strftime('%Y-%m-%d %H:%M') }}
+                </p>
+            {% endif %}
 
             <!-- Statistik-Balken -->
             <div class="vote-stats">
@@ -56,5 +64,15 @@
         {% endfor %}
     </div>
 </div>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#deadline", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        time_24hr: true
+    });
+</script>
 </body>
 </html>

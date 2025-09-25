@@ -17,33 +17,27 @@
     <form method="POST" class="auth-form">
         <input type="text" name="title" placeholder="Titel" value="{{ bet.title }}" required>
         <input type="text" name="description" placeholder="Beschreibung" value="{{ bet.description }}">
-        
+
         {% for i in range(4) %}
             <input type="text" name="option{{ i+1 }}" placeholder="Option {{ i+1 }}" value="{{ options[i] }}">
         {% endfor %}
-        
-        <input type="text" name="deadline" placeholder="Deadline (YYYY-MM-DD HH:MM)" value="{{ bet.deadline }}">
+
+        <label for="deadline">Deadline:</label>
+        <input type="datetime-local" name="deadline" value="{{ bet.deadline.strftime('%Y-%m-%dT%H:%M') if bet.deadline }}">
+
         <button type="submit">✅ Speichern</button>
     </form>
 
     <h2>Statistik</h2>
     <div class="vote-stats">
-        <table>
-            <thead>
-                <tr>
-                    {% for opt in bet.get_options() %}
-                        <th>{{ opt }}</th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    {% for opt in bet.get_options() %}
-                        <td>{{ bet.user_bets | selectattr('choice','equalto',opt) | list | length }}</td>
-                    {% endfor %}
-                </tr>
-            </tbody>
-        </table>
+        {% set total_votes = bets_stats[bet.id].values() | sum %}
+        {% for option, votes in bets_stats[bet.id].items() %}
+            {% set percent = (votes / total_votes * 100) if total_votes > 0 else 0 %}
+            <div class="stat-bar-container">
+                <div class="stat-bar" style="width: {{ percent }}%;"></div>
+                <span>{{ option }}: {{ votes }} Stimmen ({{ percent|round(1) }}%)</span>
+            </div>
+        {% endfor %}
     </div>
 
     {% if bet.result %}

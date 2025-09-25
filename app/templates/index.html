@@ -39,6 +39,11 @@
             <h2>{{ bet.title }}</h2>
             <p>{{ bet.description }}</p>
             <span class="status">{{ bet.status }}</span>
+            {% if bet.deadline %}
+                <p style="font-size:0.85rem; color:#888;">
+                    Ablauf in: {{ bet.time_left() }}
+                </p>
+            {% endif %}
 
             <!-- Abstimmung -->
             <div class="vote-buttons">
