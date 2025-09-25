@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="top-right">
+        <a href="{{ url_for('main.index') }}">🏠 Startseite</a>
+        <a href="{{ url_for('main.logout') }}">Logout</a>
+    </div>
+
+    <h1>⚡ Admin Dashboard</h1>
+
+    <h2>Neue Wette anlegen</h2>
+    <form method="POST" action="{{ url_for('admin.add_bet') }}" class="auth-form">
+        <input type="text" name="title" placeholder="Titel" required>
+        <input type="text" name="description" placeholder="Beschreibung">
+        <button type="submit">➕ Hinzufügen</button>
+    </form>
+
+    <h2>Bestehende Wetten</h2>
+    <div class="bet-list">
+        {% for bet in bets %}
+        <div class="bet-card">
+            <h2>{{ bet.title }}</h2>
+            <p>{{ bet.description }}</p>
+            <span class="status">{{ bet.status }}</span>
+            <div class="vote-buttons">
+                <a href="{{ url_for('admin.toggle_bet', bet_id=bet.id) }}">
+                    {% if bet.status == 'active' %}🔒 Schließen{% else %}🔓 Öffnen{% endif %}
+                </a>
+                <a href="{{ url_for('admin.delete_bet', bet_id=bet.id) }}" style="color: red;">🗑️ Löschen</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>

@@ -9,6 +9,9 @@
     <div class="container">
         <div class="top-right">
             <a href="{{ url_for('main.logout') }}">Logout</a>
+            {% if current_user.is_authenticated and current_user.username == "admin" %}
+                | <a href="{{ url_for('admin.dashboard') }}">Admin-Panel</a>
+            {% endif %}
         </div>
 
         <h1>Aktuelle Wetten</h1>

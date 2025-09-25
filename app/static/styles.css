@@ -203,3 +203,18 @@ h1 {
     background-color: #64b5f6;
     color: white;
 }
+
+.vote-buttons a {
+    display: inline-block;
+    margin-right: 8px;
+    padding: 6px 14px;
+    border-radius: 5px;
+    background-color: #2196F3;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+.vote-buttons a:hover {
+    background-color: #1976D2;
+}
