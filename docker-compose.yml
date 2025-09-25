@@ -1,21 +1,32 @@
+version: "3.9"
+
 services:
   db:
     image: mariadb:11
-    restart: always
+    restart: unless-stopped
     environment:
       MARIADB_ROOT_PASSWORD: root
       MARIADB_DATABASE: betting
       MARIADB_USER: user
       MARIADB_PASSWORD: password
+    volumes:
+      - betting_db:/var/lib/mysql
     ports:
-      - "3306:3306"   # DB-Port auf Host mappen, damit VSCode zugreifen kann
+      - "3306:3306"   # nur nötig, wenn du z.B. von VSCode oder extern auf DB willst
 
   app:
-    build: .
-    restart: always
+    build:
+      context: https://github.com/lulascode/gamba-webapp.git#main
+      dockerfile: Dockerfile
+    restart: unless-stopped
     depends_on:
-      - db   # nur Startreihenfolge, keine Healthchecks
+      - db
+    environment:
+      FLASK_ENV: production
+      SECRET_KEY: supersecretkey
+      SQLALCHEMY_DATABASE_URI: mysql+pymysql://user:password@db:3306/betting
     ports:
       - "5000:5000"
-    environment:
-      - FLASK_ENV=development
+
+volumes:
+  betting_db:
