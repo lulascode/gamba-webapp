@@ -1,3 +1,4 @@
+/* ====== Grundlayout ====== */
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
@@ -7,7 +8,7 @@ body {
 
 .container {
     width: 90%;
-    max-width: 800px;
+    max-width: 900px;
     margin: 40px auto;
     padding: 20px;
     background-color: #fff;
@@ -18,8 +19,28 @@ body {
 h1 {
     text-align: center;
     color: #333;
+    margin-top: 0;
 }
 
+/* ====== Header & Navigation ====== */
+.top-right {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+
+.top-right a {
+    text-decoration: none;
+    color: #2196F3;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+.top-right a:hover {
+    color: #1976D2;
+}
+
+/* ====== Wetten-Übersicht ====== */
 .bet-list {
     display: flex;
     flex-direction: column;
@@ -27,33 +48,33 @@ h1 {
 }
 
 .bet-card {
-    padding: 15px 20px;
+    padding: 20px;
     border-left: 6px solid #4CAF50;
     background-color: #fafafa;
     border-radius: 8px;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .bet-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .bet-card h2 {
     margin: 0 0 10px 0;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     color: #222;
 }
 
 .bet-card p {
-    margin: 0;
+    margin: 0 0 6px 0;
     color: #555;
 }
 
 .status {
     display: inline-block;
-    margin-top: 10px;
-    padding: 4px 8px;
+    margin-top: 8px;
+    padding: 4px 10px;
     background-color: #4CAF50;
     color: white;
     font-weight: bold;
@@ -61,66 +82,81 @@ h1 {
     font-size: 0.85rem;
 }
 
-/* Abstimm-Buttons */
-.vote-buttons {
-    margin-top: 10px;
-}
-
-.vote-buttons button {
-    margin-right: 8px;
-    padding: 6px 14px;
+/* ====== Buttons (global) ====== */
+.btn {
+    margin: 4px;
+    padding: 8px 14px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
+    font-weight: bold;
+    color: #fff;
     background-color: #2196F3;
-    color: white;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.vote-buttons button:hover {
+.btn:hover {
     background-color: #1976D2;
+    transform: translateY(-1px);
 }
 
-/* Header & Logout */
-.header {
+.btn.active {
     background-color: #4CAF50;
-    padding: 15px 0;
-    margin-bottom: 20px;
-    color: white;
 }
 
-.header-container {
-    width: 90%;
-    max-width: 800px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logout-button {
-    padding: 6px 14px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.btn-danger {
     background-color: #f44336;
-    color: white;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
 }
 
-.logout-button:hover {
+.btn-danger:hover {
     background-color: #d32f2f;
 }
 
 .user-choice {
-    margin-top: 8px;
+    margin-top: 6px;
     font-style: italic;
     color: #444;
 }
 
-/* Auth-Form */
+/* ====== Statistik-Balken ====== */
+.vote-stats {
+    margin-top: 14px;
+    padding-top: 4px;
+}
+
+.stat-bar-container {
+    position: relative;
+    background-color: #e0e0e0;
+    border-radius: 6px;
+    margin: 6px 0;
+    height: 28px;
+    overflow: hidden;
+}
+
+.stat-bar {
+    height: 100%;
+    border-radius: 6px 0 0 6px;
+    transition: width 0.4s ease;
+}
+
+.stat-text {
+    position: absolute;
+    left: 10px;
+    top: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    white-space: nowrap;
+}
+
+/* Farbcodes für Balken (abwechselnd) */
+.opt-0 { background-color: #2196F3; } /* Blau */
+.opt-1 { background-color: #4CAF50; } /* Grün */
+.opt-2 { background-color: #FF9800; } /* Orange */
+.opt-3 { background-color: #9C27B0; } /* Lila */
+
+/* ====== Auth / Forms ====== */
 .auth-form {
     display: flex;
     flex-direction: column;
@@ -162,59 +198,43 @@ h1 {
     text-align: center;
 }
 
-.top-right {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-}
-
-.top-right a {
-    text-decoration: none;
-    color: #2196F3;
-    font-weight: bold;
-}
-
-.top-right a:hover {
-    color: #1976D2;
-}
-
-/* Statistik-Tabelle */
-.vote-stats {
-    margin-top: 12px;
-    padding: 10px;
-    background-color: #e3f2fd;
-    border-radius: 6px;
-    font-size: 0.9rem;
-}
-
-.vote-stats table {
+/* ====== Tabellen (z.B. Admin) ====== */
+table {
     width: 100%;
     border-collapse: collapse;
-    text-align: center;
-    table-layout: fixed; /* alle Spalten gleich breit */
+    margin-top: 10px;
 }
 
-.vote-stats th, .vote-stats td {
-    padding: 6px 0;
-    border: 1px solid #90caf9;
+th, td {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    text-align: left;
 }
 
-.vote-stats th {
-    background-color: #64b5f6;
-    color: white;
-}
-
-.vote-buttons a {
-    display: inline-block;
-    margin-right: 8px;
-    padding: 6px 14px;
-    border-radius: 5px;
+th {
     background-color: #2196F3;
     color: white;
-    text-decoration: none;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
 }
-.vote-buttons a:hover {
-    background-color: #1976D2;
+
+.vote-stats {
+    margin-top: 10px;
+}
+
+.stat-bar-container {
+    margin-bottom: 6px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    height: 24px;
+}
+
+.stat-bar {
+    background-color: #4CAF50;
+    height: 100%;
+    text-align: right;
+    padding-right: 5px;
+    color: white;
+    line-height: 24px;
+    border-radius: 4px 0 0 4px;
 }

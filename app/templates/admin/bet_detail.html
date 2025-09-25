@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Wette bearbeiten - {{ bet.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="top-right">
+        <a href="{{ url_for('admin.dashboard') }}">🔙 Dashboard</a>
+        <a href="{{ url_for('main.logout') }}">Logout</a>
+    </div>
+
+    <h1>Wette bearbeiten: {{ bet.title }}</h1>
+
+    <form method="POST" class="auth-form">
+        <input type="text" name="title" placeholder="Titel" value="{{ bet.title }}" required>
+        <input type="text" name="description" placeholder="Beschreibung" value="{{ bet.description }}">
+        
+        {% for i in range(4) %}
+            <input type="text" name="option{{ i+1 }}" placeholder="Option {{ i+1 }}" value="{{ options[i] }}">
+        {% endfor %}
+        
+        <input type="text" name="deadline" placeholder="Deadline (YYYY-MM-DD HH:MM)" value="{{ bet.deadline }}">
+        <button type="submit">✅ Speichern</button>
+    </form>
+
+    <h2>Statistik</h2>
+    <div class="vote-stats">
+        <table>
+            <thead>
+                <tr>
+                    {% for opt in bet.get_options() %}
+                        <th>{{ opt }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for opt in bet.get_options() %}
+                        <td>{{ bet.user_bets | selectattr('choice','equalto',opt) | list | length }}</td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    {% if bet.result %}
+        <p>Ergebnis: <strong>{{ bet.result }}</strong></p>
+    {% endif %}
+</div>
+</body>
+</html>

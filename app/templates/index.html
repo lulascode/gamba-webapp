@@ -4,58 +4,83 @@
     <meta charset="UTF-8">
     <title>Gamba Webapp</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Vote Buttons vereinheitlichen */
+        .btn {
+            margin: 4px;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #fff;
+            background-color: #2196F3;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .btn:hover { background-color: #1976D2; transform: translateY(-1px); }
+        .btn.active { background-color: #4CAF50; } /* markierte Wahl */
+        .btn-danger { background-color: #f44336; }
+        .btn-danger:hover { background-color: #d32f2f; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="top-right">
-            <a href="{{ url_for('main.logout') }}">Logout</a>
-            {% if current_user.is_authenticated and current_user.username == "admin" %}
-                | <a href="{{ url_for('admin.dashboard') }}">Admin-Panel</a>
-            {% endif %}
-        </div>
+<div class="container">
+    <div class="top-right">
+        <a href="{{ url_for('main.logout') }}">Logout</a>
+        {% if current_user.is_authenticated and current_user.username == "admin" %}
+            | <a href="{{ url_for('admin.dashboard') }}">Admin-Panel</a>
+        {% endif %}
+    </div>
 
-        <h1>Aktuelle Wetten</h1>
-        <div class="bet-list">
-            {% for bet in bets %}
-            <div class="bet-card">
-                <h2>{{ bet.title }}</h2>
-                <p>{{ bet.description }}</p>
-                <span class="status">{{ bet.status }}</span>
+    <h1>Aktuelle Wetten</h1>
+    <div class="bet-list">
+        {% for bet in bets %}
+        <div class="bet-card">
+            <h2>{{ bet.title }}</h2>
+            <p>{{ bet.description }}</p>
+            <span class="status">{{ bet.status }}</span>
 
-                <!-- Eigene Abstimmung -->
-                <div class="vote-buttons">
-                    <form method="POST" action="{{ url_for('main.vote', bet_id=bet.id) }}">
-                        <button type="submit" name="choice" value="JA" {% if user_choices.get(bet.id) == 'JA' %}disabled{% endif %}>JA</button>
-                        <button type="submit" name="choice" value="NEIN" {% if user_choices.get(bet.id) == 'NEIN' %}disabled{% endif %}>NEIN</button>
-                        <button type="submit" name="choice" value="VIELLEICHT" {% if user_choices.get(bet.id) == 'VIELLEICHT' %}disabled{% endif %}>VIELLEICHT</button>
-                    </form>
-                    {% if user_choices.get(bet.id) %}
-                        <div class="user-choice">Deine Wahl: {{ user_choices.get(bet.id) }}</div>
-                    {% endif %}
-                </div>
+            <!-- Abstimmung -->
+            <div class="vote-buttons">
+                <form method="POST" action="{{ url_for('main.vote', bet_id=bet.id) }}">
+                    {% for option in bet.get_options() %}
+                        {% set chosen = (user_choices.get(bet.id) == option) %}
+                        <button type="submit"
+                                class="btn {% if chosen %}active{% endif %}"
+                                name="choice"
+                                value="{{ option }}">
+                            {{ option }}
+                        </button>
+                    {% endfor %}
+                </form>
+                {% if user_choices.get(bet.id) %}
+                    <div class="user-choice">Deine Wahl: {{ user_choices.get(bet.id) }}</div>
+                {% endif %}
+            </div>
 
-                <!-- Statistik als Tabelle -->
-                <div class="vote-stats">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>JA</th>
-                                <th>VIELLEICHT</th>
-                                <th>NEIN</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ bets_stats[bet.id]['JA'] }}</td>
-                                <td>{{ bets_stats[bet.id]['VIELLEICHT'] }}</td>
-                                <td>{{ bets_stats[bet.id]['NEIN'] }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- Statistik -->
+            <div class="vote-stats">
+                {% set total_votes = bets_stats[bet.id].values() | sum %}
+                {% for option in bet.get_options() %}
+                    {% set votes = bets_stats[bet.id].get(option, 0) %}
+                    {% set percent = (votes / total_votes * 100) if total_votes > 0 else 0 %}
+                    {% set cls = 'opt-' ~ (loop.index0 % 4) %}
+                    <div class="stat-bar-container" aria-label="{{ option }}: {{ votes }} Stimmen">
+                        <div class="stat-bar {{ cls }}" style="width: {{ percent }}%;"></div>
+                        <span class="stat-text">
+                            {{ option }}: {{ votes }} Stimmen
+                            {% if total_votes > 0 %} ({{ percent|round(1) }}%) {% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
+                <div style="margin-top:6px; font-size:0.85rem; color:#555;">
+                    Gesamtstimmen: {{ total_votes }}
                 </div>
             </div>
-            {% endfor %}
+
         </div>
+        {% endfor %}
     </div>
+</div>
 </body>
 </html>

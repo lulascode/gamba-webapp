@@ -15,7 +15,9 @@ def index():
     bets_stats = {}
     for bet in active_bets:
         votes = UserBet.query.filter_by(bet_id=bet.id).all()
-        stats = {"JA": 0, "NEIN": 0, "VIELLEICHT": 0}
+        # Dynamische Keys aus den Optionen der Wette
+        options = bet.get_options()
+        stats = {opt: 0 for opt in options}
         for vote in votes:
             if vote.choice in stats:
                 stats[vote.choice] += 1
@@ -68,19 +70,25 @@ def logout():
 @main.route('/vote/<int:bet_id>', methods=['POST'])
 @login_required
 def vote(bet_id):
+    bet = Bet.query.get_or_404(bet_id)
     choice = request.form.get('choice')
-    if choice not in ['JA','NEIN','VIELLEICHT']:
+
+    if choice not in bet.get_options():
         flash("Ungültige Auswahl!")
         return redirect(url_for('main.index'))
 
-    existing = UserBet.query.filter_by(user_id=current_user.id, bet_id=bet_id).first()
+    existing = UserBet.query.filter_by(user_id=current_user.id, bet_id=bet.id).first()
     if existing:
         existing.choice = choice
         flash("Deine Wahl wurde aktualisiert!")
     else:
-        new_vote = UserBet(user_id=current_user.id, bet_id=bet_id, choice=choice)
+        new_vote = UserBet(user_id=current_user.id, bet_id=bet.id, choice=choice)
         db.session.add(new_vote)
         flash("Abstimmung erfolgreich!")
+
+    # Ergebnis neu berechnen, falls Deadline vorbei oder geschlossen
+    if bet.is_closed():
+        bet.calculate_result()
 
     db.session.commit()
     return redirect(url_for('main.index'))

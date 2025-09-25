@@ -18,6 +18,10 @@
     <form method="POST" action="{{ url_for('admin.add_bet') }}" class="auth-form">
         <input type="text" name="title" placeholder="Titel" required>
         <input type="text" name="description" placeholder="Beschreibung">
+        <input type="text" name="option1" placeholder="Option 1" required>
+        <input type="text" name="option2" placeholder="Option 2" required>
+        <input type="text" name="option3" placeholder="Option 3 (optional)">
+        <input type="text" name="option4" placeholder="Option 4 (optional)">
         <button type="submit">➕ Hinzufügen</button>
     </form>
 
@@ -28,11 +32,25 @@
             <h2>{{ bet.title }}</h2>
             <p>{{ bet.description }}</p>
             <span class="status">{{ bet.status }}</span>
+
+            <!-- Statistik-Balken -->
+            <div class="vote-stats">
+                {% set total_votes = bets_stats[bet.id].values() | sum %}
+                {% for option, votes in bets_stats[bet.id].items() %}
+                    {% set percent = (votes / total_votes * 100) if total_votes > 0 else 0 %}
+                    <div class="stat-bar-container">
+                        <div class="stat-bar" style="width: {{ percent }}%;"></div>
+                        <span>{{ option }}: {{ votes }} Stimmen ({{ percent|round(1) }}%)</span>
+                    </div>
+                {% endfor %}
+            </div>
+
             <div class="vote-buttons">
                 <a href="{{ url_for('admin.toggle_bet', bet_id=bet.id) }}">
                     {% if bet.status == 'active' %}🔒 Schließen{% else %}🔓 Öffnen{% endif %}
                 </a>
                 <a href="{{ url_for('admin.delete_bet', bet_id=bet.id) }}" style="color: red;">🗑️ Löschen</a>
+                <a href="{{ url_for('admin.bet_detail', bet_id=bet.id) }}">✏️ Bearbeiten</a>
             </div>
         </div>
         {% endfor %}
