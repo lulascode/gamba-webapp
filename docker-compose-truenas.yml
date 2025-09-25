@@ -10,13 +10,11 @@ services:
       MARIADB_USER: user
       MARIADB_PASSWORD: password
     volumes:
-      - betting_db:/var/lib/mysql
-    ports:
-      - "3306:3306"   # nur nötig, wenn du z.B. von VSCode oder extern auf DB willst
+      - /mnt/FastData/Databases/gamba-data:/var/lib/mysql
 
   app:
     build:
-      context: .
+      context: https://github.com/lulascode/gamba-webapp.git#main
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
@@ -27,6 +25,3 @@ services:
       SQLALCHEMY_DATABASE_URI: mysql+pymysql://user:password@db:3306/betting
     ports:
       - "5000:5000"
-
-volumes:
-  betting_db:
